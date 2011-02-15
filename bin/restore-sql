@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 DATABASENAME=$1
 MYSQLUSER=$2
 MYSQLPASS=$3
