@@ -1,0 +1,18 @@
+<!-- vim: set filetype=html foldmethod=marker : -->
+
+<h3>Login</h3>
+
+<: if $failed { :>
+<div class="error">
+    Sorry, your login attempt failed. Please try again.
+</div>
+<: } :>
+
+<form method="post" action="<: $path :>">
+    <label for="user">User:</label>
+    <input type="text" name="user" /><br />
+    <label for="pass">Pass:</label>
+    <input type="password" name="pass" /><br />
+    <input type="submit" value="Log in" />
+</form>
+

@@ -1,0 +1,24 @@
+<!-- vim: set filetype=html foldmethod=marker : -->
+
+<div class="article">
+
+    <: if $article { :>
+
+        : include "article-general.tt" { article => $article };
+
+        <div class="article-body">
+            <: $article.body_html | raw :>
+        </div>
+
+    <: } else { :>
+
+        <pre>Sorry, no such article :(</pre>
+
+    <: } :>
+
+</div>
+
+<div class="about">
+    <: include "about-author.tt" :>
+</div>
+

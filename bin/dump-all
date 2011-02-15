@@ -1,0 +1,12 @@
+#!/bin/bash
+DATABASENAME=$1
+MYSQLUSER=$2
+MYSQLPASS=$3
+if [[ -z "$DATABASENAME" || -z "$MYSQLUSER" || -z "$MYSQLPASS" ]]; then
+    echo "$0 databasename USER PASS"
+    exit 1
+fi
+mysqldump --no-autocommit --default-character-set=utf8 --skip-extended-insert -u$MYSQLUSER -p"$MYSQLPASS" $DATABASENAME > sql/dump-brocco.sql
+mysqldump --no-data --no-autocommit --default-character-set=utf8 --skip-extended-insert -u$MYSQLUSER -p"$MYSQLPASS" $DATABASENAME > sql/dump-brocco-schema.sql
+dbicdump -o dump_directory=lib/ Brocco::Schema dbi:mysql:database=$DATABASENAME $MYSQLUSER $MYSQLPASS
+sqlt-diagram -d MySQL -i png -o public/brocco-schema.png sql/dump-brocco-schema.sql

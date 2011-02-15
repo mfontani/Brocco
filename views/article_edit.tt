@@ -1,0 +1,80 @@
+<!-- vim: set filetype=html foldmethod=marker : -->
+
+    <h3><: if $article { :>Edit your<: } else { :>Post a new<: } :> article</h3>
+
+    <form id="article_form" method="post" action="<: if $article { :>/article/edit/<: $article.id :><: } else { :>/article/new<: } :>">
+        <table width="100%">
+            <tr>
+                <th>Status:</th>
+                <td><select name="status">
+                    <: for ["draft","archived","live"] -> $status { :>
+                        <option <: if $article.status == $status { :>SELECTED<: } :> value="<: $status :>"><: $status :></option>
+                    <: } :>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <th>Title</th>
+                <td><input placeholder="An amazing article on..?"
+                    value="<: $article.title :>"
+                    style="width:100%" type="text" name="title" /></td>
+            </tr>
+            <tr>
+                <th>Tags</th>
+                <td><input placeholder="comma-separated tags like git, perl, cpan"
+                    value="<: for $article.tags -> $article_tag { :><: $article_tag.name :><: if !$~article_tag.is_last { :>, <: } } :>"
+                    style="width:100%" type="text" name="tags" /></td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td><input placeholder="META description for this article"
+                    value="<: $article.description :>"
+                    style="width:100%" type="text" name="description" /></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <em>Your article</em>:<br />
+                    <textarea placeholder="Separate the teaser using [cut]. Use markdown syntax. Click preview."
+                        id="markdown_body" name="body" style="width:100%;" rows=15><: $article.body :></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <button style="float:left;" id="update_preview">Preview</button>
+                    <input style="float:right;" type="submit" value="Save" />
+                </td>
+            </tr>
+        </table>
+    </form>
+
+    <div id="preview_border" style="display: none;">
+        <tt>Your article's preview:</tt>
+        <div style="border: 1px dashed #555; background-color: #efe;" id="preview"></div>
+    </div>
+    <div id="preview_error"></div>
+
+    <script>
+        $('#update_preview').click(function() {
+            $.ajax({
+                type: "POST",
+                url: "/article/preview_render",
+                data: {
+                    title: $('#article_form :input[name="title"]').val(),
+                    tags:  $('#article_form :input[name="tags"]').val(),
+                    text:  $('#markdown_body').val(),
+                },
+                cache: false,
+                success: function(html) {
+                    $('#preview').html( html );
+                    $('#preview_border').show();
+                    $('#preview_error').html('');
+                },
+                error: function(jqXHR,textStatus) {
+                    $('#preview_border').hide();
+                    $('#preview_error'). html("An error occurred: " + textStatus);
+                },
+            });
+            return false;
+        });
+    </script>
+

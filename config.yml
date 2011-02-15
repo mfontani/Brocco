@@ -1,0 +1,55 @@
+# This is the main configuration file of your Dancer app
+# env-related settings should go to environments/$env.yml
+# all the settings in this file will be loaded at Dancer's startup.
+
+# Your application's name
+appname: "Brocco"
+
+# The default layout to use for your application (located in
+# views/layouts/main.tt)
+layout: "main"
+
+# when the charset is set to UTF-8 Dancer will handle for you
+# all the magic of encoding and decoding. You should not care
+# about unicode within your app when this setting is set (recommended).
+charset: "UTF-8"
+
+# template engine -- change the directory where caches are stored!
+template: "xslate"
+engines:
+  xslate:
+    cache_dir: "/tmp/brocco_xslate_cache"
+    cache: 1
+    path:
+      - /
+      - ./views
+
+# Admin user sessions stored in cookie -- change the cookie key!
+session: "cookie"
+session_cookie_key: "tHIs rANdOm kEy IS NoT vEry rANDom"
+
+# Change at least the MySQL credentials...
+# Also look at environment/ to set these to different values
+# based on production/development
+plugins:
+  Memcached:
+    servers:
+      - "127.0.0.1:11211"
+    namespace: 'brocco:'
+### Change these on environments/
+#  DBIC:
+#    dev:
+#        dsn:  "dbi:mysql:database=brocco"
+#        user: "root"
+#        pass: "PASSWORD"
+#        schema_class: "Brocco::Schema"
+
+## Change "cdn" to a static URL where you can serve the contents of public/
+## Or, just leave it uncommented -- best changed on environments/production.yml
+brocco:
+  blog_name:     'My new Brocco Blog'
+  blog_title:    'Brocco | Blog'
+  blog_subtitle: 'Blogging about stuff'
+  cache_for:     3600
+  #cdn:          'static.example.com'
+

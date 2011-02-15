@@ -1,0 +1,6 @@
+<: if $article.author { :>
+    <em>About <: $article.author.name :></em>:
+    <: $article.author.bio | raw :>
+<: } else { :>
+    <: include "about-blog.tt" :>
+<: } :>

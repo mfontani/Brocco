@@ -1,0 +1,8 @@
+This blog is written in <a href="http://perl.org">Perl</a>,
+using the <a href="http://perldancer.org/">Dancer</a> framework,
+<a href="http://search.cpan.org/dist/Text-MultiMarkdown">Text::MultiMarkdown</a>,
+<a href="http://search.cpan.org/dist/DBIx-Class">DBIx::Class</a>,
+<a href="http://search.cpan.org/dist/Cache-Memcached-Fast">Cache::Memcached::Fast</a>,
+and countless other <a href="http://search.cpan.org/">CPAN</a> modules.
+It is deployed using <a href="http://search.cpan.org/dist/Starman">Starman</a>.
+The source code can be found at XXX.

@@ -1,0 +1,9 @@
+#!/bin/sh
+DATABASENAME=$1
+MYSQLUSER=$2
+MYSQLPASS=$3
+if [[ -z "$DATABASENAME" || -z "$MYSQLUSER" || -z "$MYSQLPASS" ]]; then
+    echo "$0 databasename USER PASS"
+    exit 1
+fi
+mysql -u$MYSQLUSER -p$MYSQLPASS $DATABASENAME < sql/dump-brocco.sql

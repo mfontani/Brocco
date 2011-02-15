@@ -1,0 +1,8 @@
+
+          <li>
+            <h3>My links</h3>
+            <ul class="links">
+                <li><a href="http://search.cpan.org">CPAN</a>
+            </ul>
+          </li>
+

@@ -1,0 +1,14 @@
+
+<h1><a href="/article/<: $article.id :>/<: $article.nice_title :>.html"><: $article.title :></a></h1>
+<div class="article-meta">by <: $article.author.nickname :> on <: $article.published :>
+    <: if $session_username { :>
+    -- <a href="/article/edit/<: $article.id :>">Edit this article</a>
+    <: } :>
+</div>
+<div class="article-tags real-tags">Filed under
+    <: for $article.tags -> $article_tag { :>
+    <a href="/article/tag/<: $article_tag.name :>"><: $article_tag.name :></a><: if !$~article_tag.is_last { :>, <: } :>
+    <: } :>
+</div>
+
+

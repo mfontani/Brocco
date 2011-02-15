@@ -1,0 +1,25 @@
+<!-- vim: set filetype=html foldmethod=marker : -->
+
+    <: if defined $articles {:>
+
+        <: for $articles -> $article { :>
+
+            <div class="article" style="position:relative;">
+
+                : include "article-general.tt" { article => $article };
+
+                <div class="article-body">
+                    <: $article.excerpt_html | raw :>
+                    <div style="margin-left: 2em;">→ <a href="/article/<: $article.id :>/<: $article.nice_title :>.html">continue reading</a></div>
+                </div>
+
+            </div>
+
+        <: } :>
+
+    <: } else { :>
+
+        <pre>Sorry, this blog has no articles yet :(</pre>
+
+    <: } :>
+
