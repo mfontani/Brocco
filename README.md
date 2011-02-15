@@ -12,8 +12,8 @@ starman to run the webapp.
 
 Create the new user, su to it
 
-    $ sudo 'adduser --disabled-password --gecos 'BlogPan' blogpan
-    $ sudo su - blogpan
+    $ sudo su -c "adduser --disabled-password --gecos 'Brocco' brocco"
+    $ sudo su - brocco
 
 Install cpanm
 
