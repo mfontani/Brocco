@@ -16,6 +16,10 @@ show_errors: 0
 route_cache: 1
 
 plugins:
+  Memcached:
+    servers:
+      - "127.0.0.1:11211"
+    namespace: 'brocco:'
   DBIC:
     live:
         dsn:  "dbi:mysql:database=brocco"
@@ -24,4 +28,8 @@ plugins:
         schema_class: "Brocco::Schema"
 
 #brocco:
+#  blog_name:     'My new Brocco Blog'
+#  blog_title:    'Brocco | Blog'
+#  blog_subtitle: 'Blogging about stuff'
+#  cache_for:     3600
 #  cdn: 'static.example.com'

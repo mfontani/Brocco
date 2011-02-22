@@ -28,21 +28,8 @@ engines:
 session: "cookie"
 session_cookie_key: "tHIs rANdOm kEy IS NoT vEry rANDom"
 
-# Change at least the MySQL credentials...
-# Also look at environment/ to set these to different values
+# Also look at environment/ to set plugins' configuration to different values
 # based on production/development
-plugins:
-  Memcached:
-    servers:
-      - "127.0.0.1:11211"
-    namespace: 'brocco:'
-### Change these on environments/
-#  DBIC:
-#    dev:
-#        dsn:  "dbi:mysql:database=brocco"
-#        user: "root"
-#        pass: "PASSWORD"
-#        schema_class: "Brocco::Schema"
 
 ## Change "cdn" to a static URL where you can serve the contents of public/
 ## Or, just leave it uncommented -- best changed on environments/production.yml

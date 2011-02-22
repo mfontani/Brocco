@@ -9,7 +9,8 @@ logger: "console"
 # the log level for this environement
 # core is the lowest, it shows Dancer's core log messages as well as yours
 # (debug, warning and error)
-log: "debug"
+#log: "debug"
+log: "core"
 
 # should Dancer consider warnings as critical errors?
 warnings: 1
@@ -27,10 +28,14 @@ show_errors: 1
 auto_reload: 0
 
 plugins:
+  Memcached:
+    servers:
+      - "127.0.0.1:11211"
+    namespace: 'broccodev:'
   DBIC:
-    dev:
-        dsn:  "dbi:mysql:database=brocco"
-        user: "root"
-        pass: "PASSWORD"
-        schema_class: "Brocco::Schema"
+    schema:
+        skip_automake: 1
+        pckg: "Brocco::Schema"
+        connect_info:
+            - dbi:SQLite:dbname=brocco.db
 
