@@ -7,6 +7,8 @@ use Brocco;
 BEGIN{ chdir 't/' }
 use Dancer::Test;
 
+Brocco::set log => 'debug';
+
 route_exists          [ GET   => '/' ], 'a route handler is defined for /';
 response_status_is    [ 'GET' => '/' ], 200, 'response status is 200 for /';
 response_content_like [ GET   => '/' ], qr{title>Brocco \| Blog</title}, "title OK for GET";

@@ -8,6 +8,8 @@ BEGIN{ chdir 't/' }
 use Dancer::Test;
 use Data::Dumper;
 
+Brocco::set log => 'debug';
+
 # login
 dancer_response POST => '/login' => { params => { user => 'admin', pass => 'Passw0rd', }};
 # GET after login should give welcome

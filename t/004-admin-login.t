@@ -8,6 +8,8 @@ BEGIN{ chdir 't/' }
 use Dancer::Test;
 use Data::Dumper;
 
+Brocco::set log => 'debug';
+
 route_exists          [ GET   => '/login' ], 'a route handler is defined for /login';
 response_status_is    [ 'GET' => '/login' ], 200, 'response status is 200 for /login';
 response_content_like [ GET   => '/login' ], qr{title>Brocco | Blog</title}, "title OK for GET";
