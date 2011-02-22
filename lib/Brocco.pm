@@ -97,7 +97,7 @@ get '/' => sub {    # {{{
 
 get '/article/tag/:tag' => sub {    # {{{
 
-    my $articles_by_tag = 0; # $memd->get("articles-by-tag-" . params->{tag});
+    my $articles_by_tag = $memd->get("bytag-" . params->{tag});
     if (!$articles_by_tag) {
 
         $articles_by_tag = [ schema->resultset('Article')->search(
@@ -117,7 +117,7 @@ get '/article/tag/:tag' => sub {    # {{{
         if ($articles_by_tag) {
 
             $articles_by_tag = [ map $_->as_hashref, @$articles_by_tag ];
-            $memd->set( "articles-by-tag-" . params->{tag}, $articles_by_tag, $default_cache_for );
+            $memd->set( "bytag-" . params->{tag}, $articles_by_tag, $default_cache_for );
 
             #} else {
             #    debug("No such article id $id -- not cached");
@@ -126,7 +126,7 @@ get '/article/tag/:tag' => sub {    # {{{
     #    debug("Got cached article id $id");
     }
 
-    debug("Have " . scalar @$articles_by_tag . " articles tagged " . params->{tag});
+    #debug("Have " . scalar @$articles_by_tag . " articles tagged " . params->{tag});
 
     return template articles_by_tag => { tag => params->{tag}, articles_by_tag => $articles_by_tag };
 };    # }}}
@@ -284,6 +284,7 @@ post '/article/edit/:id' => sub {    # {{{
     $article->updated( sprintf( "%04d-%02d-%02d %02d:%02d:%02d", Today_and_Now() ) ) if $changes;
     $article->update if $changes;
 
+    my @old_tags =  map { $_->tag->name } $article->article_tags;
     $_->delete for $article->article_tags;
     my @new_tags = ( split( /,\s*/, params->{tags} ) );
     my @tag_ids = do {
@@ -304,7 +305,7 @@ post '/article/edit/:id' => sub {    # {{{
     schema->populate( 'ArticleTag',
         [ [ 'article_id', 'tag_id' ], map { [ $article->id, $_ ] } @tag_ids ] );
 
-    $memd->delete_multi( qw/tag_cloud latest_10_articles/, "article-" . $article->id );
+    $memd->delete_multi( qw/tag_cloud latest_10_articles/, "article-" . $article->id, map { "bytag-$_" } (@old_tags,@new_tags));
 
     return redirect '/article/edit/' . $article->id;
 };    # }}}
@@ -353,7 +354,7 @@ post '/article/new' => sub {    # {{{
     schema->populate( 'ArticleTag',
         [ [ 'article_id', 'tag_id' ], map { [ $article->id, $_ ] } @tag_ids ] );
 
-    $memd->delete_multi( qw/tag_cloud latest_10_articles/, "article-" . $article->id );
+    $memd->delete_multi( qw/tag_cloud latest_10_articles/, "article-" . $article->id, map { "bytag-$_" } @new_tags);
 
     flash message => 'Article created';
     return redirect '/article/edit/' . $article->id;
