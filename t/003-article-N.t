@@ -4,6 +4,7 @@ use warnings;
 
 # the order is important
 use Brocco;
+BEGIN{ chdir 't/' }
 use Dancer::Test;
 
 route_exists          [ GET   => '/article/1' ], 'a route handler is defined for /article/1';

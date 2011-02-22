@@ -23,6 +23,7 @@ engines:
     path:
       - /
       - ./views
+      - ../views
 
 # Admin user sessions stored in cookie -- change the cookie key!
 session: "cookie"

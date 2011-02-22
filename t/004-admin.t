@@ -4,6 +4,7 @@ use warnings;
 
 # the order is important
 use Brocco;
+BEGIN{ chdir 't/' }
 use Dancer::Test;
 use Data::Dumper;
 
