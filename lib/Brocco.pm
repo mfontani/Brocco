@@ -10,7 +10,7 @@ use Text::MultiMarkdown;
 
 use Date::Calc qw/Today_and_Now/;
 
-our $VERSION = '0.2';
+our $VERSION = '0.3';
 
 our $memd = Cache::Memcached::Fast->new(
     {
@@ -95,6 +95,42 @@ get '/' => sub {    # {{{
     return template index => { articles => $latest_articles };
 };    # }}}
 
+get '/article/tag/:tag' => sub {    # {{{
+
+    my $articles_by_tag = 0; # $memd->get("articles-by-tag-" . params->{tag});
+    if (!$articles_by_tag) {
+
+        $articles_by_tag = [ schema->resultset('Article')->search(
+            {
+                'status'   => 'live',
+                'tag.name' => params->{tag},
+            },
+            {
+                join     => { 'article_tags', 'tag' },
+                distinct => 1,
+                '+select' => [ { count => 'article_id', -as => 'cnt' } ],
+                '+as'     => [qw/num_articles/],
+                order_by => { -desc => 'cnt' },
+            }
+          )->all
+        ];
+        if ($articles_by_tag) {
+
+            $articles_by_tag = [ map $_->as_hashref, @$articles_by_tag ];
+            $memd->set( "articles-by-tag-" . params->{tag}, $articles_by_tag, $default_cache_for );
+
+            #} else {
+            #    debug("No such article id $id -- not cached");
+        }
+    # } else {
+    #    debug("Got cached article id $id");
+    }
+
+    debug("Have " . scalar @$articles_by_tag . " articles tagged " . params->{tag});
+
+    return template articles_by_tag => { tag => params->{tag}, articles_by_tag => $articles_by_tag };
+};    # }}}
+
 get qr{^/article/(\d+)(?:/.*)?$} => sub {    # {{{
 
     my ($id) = splat;
@@ -117,6 +153,7 @@ get qr{^/article/(\d+)(?:/.*)?$} => sub {    # {{{
 
     return template article => { article => $article };
 };    # }}}
+
 
 ## Admin routes:
 
