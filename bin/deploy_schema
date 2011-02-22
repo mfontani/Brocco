@@ -1,0 +1,55 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+use lib '../lib', 'lib';
+use Brocco::Schema;
+use YAML qw/Dump LoadFile/;
+
+my $config = shift or die "Need config file\n";
+-f $config or die "Need existing config file\n";
+
+my $dancer_conf = LoadFile($config);
+
+my $dbix_conf = $dancer_conf->{plugins}->{DBIC}->{schema};
+
+my $schema = Brocco::Schema->connect( @{ $dbix_conf->{connect_info} } );
+
+$schema->deploy;
+
+# Add the "admin" author
+$schema->resultset('Author')->new(
+    {
+        id       => 1,
+        nickname => 'nickname',
+        status   => 'live',
+        name     => 'The Admin',
+        username => 'admin',
+        password => 'ebfc7910077770c8340f63cd2dca2ac1f120444f',
+        bio      => "I am the blog's admin.",
+    }
+)->insert;
+
+# Add the first article
+$schema->resultset('Article')->new(
+    {
+        id          => 1,
+        author_id   => 1,
+        created     => '2011-02-08 21:59:00',
+        published   => '2011-02-08 21:59:00',
+        updated     => '2011-02-14 19:22:40',
+        status      => 'live',
+        title       => 'My first post',
+        description => 'meta description for the web',
+        body        => 'Blah blah',
+    }
+)->insert;
+
+# Add some tags
+$schema->resultset('Tag')->new( { id => 1, name => 'stuff' } )->insert;
+$schema->resultset('Tag')->new( { id => 2, name => 'meh' } )->insert;
+
+# Assign them to the article
+$schema->resultset('ArticleTag')->new({ article_id => 1, tag_id => 1 })->insert;
+$schema->resultset('ArticleTag')->new({ article_id => 1, tag_id => 2 })->insert;
+
+print "Done: deployed to:", Dump($dbix_conf);
